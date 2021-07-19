@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": "<SUBSCRIPTION_ID>"
+        },
+        "location": {
+            "value": "<LOCATION>"
+        },
+        "resourceGroupName": {
+            "value": "<REESOURCE_GROUP>"
+        },
+        "privateEndpointName": {
+            "value": "<PRIVATE_ENDPOINT_NAME>"
+        },
+        "privateLinkResourceType":{
+            "value": "<RESOURCE_TYPE>"
+        },
+        "privateLinkResourceName":{
+            "value": "<RESOURCE_NAME>"
+        },
+        "targetSubResource": {
+            "value": [
+                "<TARGET_SUB_RESOURCE>"
+            ]
+        },
+        "requestMessage": {
+            "value": ""
+        },
+        "virtualNetworkName":{
+            "value": "<VIRTUAL_NETWORK_NAME>"
+        },
+        "subnetName":{
+            "value": "<SUBNET_NAME>"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "<VNET_RESOURCE_GROUP_NAME>"
+        },
+        "networkInterfaceName": {
+            "value": "<NETWORK_INTERFACE_NAME>"
+        },
+        "networkInterfaceIpConfigName": {
+            "value": "<NETWORK_INTERFACE_IP_CONFIG_NAME>"
+        },
+        "tags": {
+            "value": {
+                "": ""
+            }
+        }
+    }
+}

@@ -33,9 +33,21 @@
         "description": "Location for all resources."
       }
     },
+    "resourceGroupName": {
+      "type": "string"
+    },
+    "virtualNetworkName": {
+      "type": "string"
+    },
+    "subnetName": {
+      "type": "string"
+    },
     "tags": {
       "type": "object"
     }
+  },
+  "variables": {
+    "subnetResourceId": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/virtualNetworks/subnets',parameters('virtualNetworkName'),parameters('subnetName'))]"
   },
   "resources": [
     {
@@ -68,6 +80,27 @@
             "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
             "enablePartitioning": false,
             "enableExpress": false
+          }
+        },
+        {
+          "type": "Microsoft.ServiceBus/namespaces/networkRuleSets",
+          "apiVersion": "2021-01-01-preview",
+          "name": "[concat(parameters('serviceBusNamespaceName'),'/',parameters('subnetName'))]",
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusNamespaceName'))]"
+          ],
+          "properties": {
+            "defaultAction": "Deny",
+            "virtualNetworkRules": [
+              {
+                "subnet": {
+                  "id": "[variables('subnetResourceId')]"
+                },
+                "ignoreMissingVnetServiceEndpoint": false
+              }
+            ],
+            "ipRules": []
           }
         }
       ]

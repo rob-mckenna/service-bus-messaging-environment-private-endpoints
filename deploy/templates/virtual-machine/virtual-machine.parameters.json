@@ -1,0 +1,68 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "<LOCATION>"
+        },
+        "networkInterfaceName": {
+            "value": "<NETWORK_INTERFACE_NAME>"
+        },
+        "networkInterfaceIpConfigName": {
+            "value": "<NETWORK_INTERFACE_IP_CONFIG_NAME>"
+        },
+        "networkSecurityGroupName": {
+            "value": "<SECURITY_GROUP_NAME>"
+        },
+        "networkSecurityGroupRules": {
+            "value": []
+        },
+        "subnetName": {
+            "value": "<SUBNET_NAME>"
+        },
+        "virtualNetworkName": {
+            "value": "<VIRTUAL_NETWORK_NAME>"
+        },
+        "publicIpAddressName": {
+            "value": "<PUBLIC_IP_ADDRESS"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        },
+        "virtualMachineName": {
+            "value": "<VIRTUAL_MACHINE_NAME>"
+        },
+        "virtualMachineComputerName": {
+            "value": "<VIRTUAL_MACHINE_COMPUTER_NAME>"
+        },
+        "virtualMachineRG": {
+            "value": "<RESOURCE_GROUP>"
+        },
+        "osDiskType": {
+            "value": "Premium_LRS"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_B2ms"
+        },
+        "adminUsername": {
+            "value": "<ADMIN_USER>"
+        },
+        "adminPassword": {
+            "value": null
+        },
+        "patchMode": {
+            "value": "AutomaticByOS"
+        },
+        "enableHotpatching": {
+            "value": false
+        },
+        "tags": {
+            "value": {
+                "": ""
+            }
+        }
+    }
+}
