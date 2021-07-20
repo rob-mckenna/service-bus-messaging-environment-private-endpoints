@@ -63,7 +63,7 @@ echo "Virtual Network with Azure Bastion - START"
 
 echo "Virtual Machine - START"
 virtualMachineName="$environment-vm01"
-virtualMachineComputerName=${virutalMachineName:0:15}
+virtualMachineComputerName=${virtualMachineName:0:15}
 subnetName="default"
 networkInterfaceName="$environment-nic"
 networkInterfaceIpConfigName="ipconfig1"
@@ -75,7 +75,7 @@ az deployment group create \
     --parameters virtualMachineName=$virtualMachineName virtualMachineRG=$resourceGroupName location=$location \
         networkInterfaceName=$networkInterfaceName networkInterfaceIpConfigName=$networkInterfaceIpConfigName networkSecurityGroupName="$virtualMachineName-nsg" \
         virtualMachineComputerName=$virtualMachineComputerName subnetName=$subnetName virtualNetworkName=$virtualNetworkName \
-        publicIpAddressName="$virutalMachineName-pip" \
+        publicIpAddressName="$virtualMachineName-pip" \
         adminUsername=$vmAdminUsername adminPassword=$vmAdminPassword tags=$tags
 
 echo "Virtual Machine - END"
@@ -122,7 +122,7 @@ echo "Private Endpoint for Service Bus namespace - START"
 # Service Bus namespace and queue(s)
 az deployment group create \
     --resource-group $resourceGroupName \
-    --name service-bus \
+    --name private-endpoint-service-bus \
     --template-file ../templates/private-endpoint/private-endpoint.deploy.json \
     --parameters @../templates/private-endpoint/private-endpoint.parameters.json \
     --parameters privateEndpointName="$environment-prvendpnt01" resourceGroupName=$resourceGroupName location=$location tags=$tags \
