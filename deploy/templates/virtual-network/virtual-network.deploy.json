@@ -47,6 +47,9 @@
         "publicIpAddressForBastion": {
             "type": "string"
         },
+        "appSvcVnetIntegrationSubnetAddressSpace": {
+            "type": "string"
+        },
         "tags": {
             "type": "object"
         }
@@ -72,6 +75,7 @@
                         "name": "default",
                         "properties": {
                             "addressPrefix": "10.2.0.0/24",
+                            "privateEndpointNetworkPolicies": "Disabled",
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.ServiceBus",
@@ -86,6 +90,20 @@
                         "name": "AzureBastionSubnet",
                         "properties": {
                             "addressPrefix": "[parameters('bastionSubnetAddressSpace')]"
+                        }
+                    },
+                    {
+                        "name": "app-svc-vnet-integ-subnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('appSvcVnetIntegrationSubnetAddressSpace')]",
+                            "delegations": [
+                                {
+                                    "name": "Microsoft.Web/serverFarms-delegation",
+                                    "properties": {
+                                        "serviceName": "Microsoft.Web/serverFarms"
+                                    }
+                                }
+                            ]
                         }
                     }
                 ],

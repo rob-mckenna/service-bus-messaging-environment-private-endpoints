@@ -17,6 +17,12 @@
         "serverFarmResourceGroup": {
             "value": "<RESOURCE_GROUP>"
         },
+        "virtualNetworkName":{
+            "value": "<VIRTUAL_NETWORK_NAME>"
+        },
+        "subnetName":{
+            "value": "<SUBNET_NAME>"
+        },
         "alwaysOn": {
             "value": true
         },
@@ -42,7 +48,7 @@
             "value": "OFF"
         },
         "errorLink": {
-            "value": "https://svcbus-msging-env-app01.scm.azurewebsites.net/detectors?type=tools&name=eventviewer"
+            "value": ""
         },
         "tags": {
             "value": {

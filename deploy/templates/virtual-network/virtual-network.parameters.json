@@ -49,6 +49,9 @@
         "publicIpAddressForBastion": {
             "value": "svcbus-msging-dev02-pip"
         },
+        "appSvcVnetIntegrationSubnetAddressSpace": {
+            "value": "10.2.2.0/26"
+        },
         "tags": {
             "value": {
                 "": ""

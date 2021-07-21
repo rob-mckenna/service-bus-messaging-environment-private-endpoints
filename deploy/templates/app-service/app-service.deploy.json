@@ -17,6 +17,12 @@
         "serverFarmResourceGroup": {
             "type": "string"
         },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
         "alwaysOn": {
             "type": "bool"
         },
@@ -48,9 +54,13 @@
             "type": "object"
         }
     },
+    "variables": {
+        "virtualNetworkId": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('virtualNetworkId'), '/subnets/', parameters('subnetName'))]"
+    },
     "resources": [
         {
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2020-12-01",
             "name": "[parameters('name')]",
             "type": "Microsoft.Web/sites",
             "location": "[parameters('location')]",
@@ -61,6 +71,8 @@
             "properties": {
                 "name": "[parameters('name')]",
                 "siteConfig": {
+                    "vnetRouteAllEnabled": true,
+                    "http20Enabled": true,
                     "appSettings": [
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -93,6 +105,8 @@
                     "alwaysOn": "[parameters('alwaysOn')]"
                 },
                 "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "virtualNetworkSubnetId": "[variables('subnetRef')]",
+                "httpsOnly": true,
                 "clientAffinityEnabled": true
             }
         },

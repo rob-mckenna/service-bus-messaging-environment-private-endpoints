@@ -141,9 +141,10 @@ az deployment group create \
     --template-file ../templates/app-service/app-service.deploy.json \
     --parameters @../templates/app-service/app-service.parameters.json \
     --parameters name="$environment-webapp01" location=$location tags=$tags \
-        subscriptionId=$currentSubscriptionId \
+        resourceGroupName=$resourceGroupName subscriptionId=$currentSubscriptionId \
         hostingPlanName="$environment-appsvcplan" \
-        serverFarmResourceGroup=$resourceGroupName
+        serverFarmResourceGroup=$resourceGroupName \
+        virtualNetworkName=$virtualNetworkName subnetName="app-svc-vnet-integ-subnet"
 
 echo "App Service - END"
 
