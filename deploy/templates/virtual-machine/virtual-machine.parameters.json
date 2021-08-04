@@ -23,15 +23,6 @@
         "virtualNetworkName": {
             "value": "<VIRTUAL_NETWORK_NAME>"
         },
-        "publicIpAddressName": {
-            "value": "<PUBLIC_IP_ADDRESS"
-        },
-        "publicIpAddressType": {
-            "value": "Dynamic"
-        },
-        "publicIpAddressSku": {
-            "value": "Basic"
-        },
         "virtualMachineName": {
             "value": "<VIRTUAL_MACHINE_NAME>"
         },

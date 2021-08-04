@@ -27,10 +27,10 @@
             "value": true
         },
         "sku": {
-            "value": "Standard"
+            "value": "PremiumV2"
         },
         "skuCode": {
-            "value": "S1"
+            "value": "P1v2"
         },
         "workerSize": {
             "value": "0"

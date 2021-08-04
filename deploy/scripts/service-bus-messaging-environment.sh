@@ -75,7 +75,6 @@ az deployment group create \
     --parameters virtualMachineName=$virtualMachineName virtualMachineRG=$resourceGroupName location=$location \
         networkInterfaceName=$networkInterfaceName networkInterfaceIpConfigName=$networkInterfaceIpConfigName networkSecurityGroupName="$virtualMachineName-nsg" \
         virtualMachineComputerName=$virtualMachineComputerName subnetName=$subnetName virtualNetworkName=$virtualNetworkName \
-        publicIpAddressName="$virtualMachineName-pip" \
         adminUsername=$vmAdminUsername adminPassword=$vmAdminPassword tags=$tags
 
 echo "Virtual Machine - END"
@@ -92,16 +91,19 @@ az deployment group create \
 
 echo "Key Vault - END"
 
-echo "Storage Account - START"
+echo "Storage Account with Private Endpoint - START"
 # Storage Account
 az deployment group create \
     --resource-group $resourceGroupName \
     --name storage-account \
-    --template-file ../templates/storage-account/storage-account.deploy.json \
-    --parameters @../templates/storage-account/storage-account.parameters.json \
-    --parameters storageAccountName=$storageAccountName location=$location tags=$tags
+    --mode incremental \
+    --template-file ../templates/storage-account-with-private-endpoint/storage-account-with-private-endpoint.deploy.json \
+    --parameters @../templates/storage-account-with-private-endpoint/storage-account-with-private-endpoint.parameters.json \
+    --parameters storageAccountName=$storageAccountName location=$location tags=$tags \
+        virtualNetworkName=$virtualNetworkName subnetName=$subnetName virtualNetworkResourceGroup=$resourceGroupName \
+        privateEndpointName="$environment-prvendpnt04"
 
-echo "Storage Account - END"
+echo "Storage Account with Private Endpoint - END"
 
 echo "Service Bus - START"
 # Service Bus namespace and queue(s)
@@ -141,7 +143,7 @@ az deployment group create \
     --template-file ../templates/app-service/app-service.deploy.json \
     --parameters @../templates/app-service/app-service.parameters.json \
     --parameters name="$environment-webapp01" location=$location tags=$tags \
-        resourceGroupName=$resourceGroupName subscriptionId=$currentSubscriptionId \
+        subscriptionId=$currentSubscriptionId \
         hostingPlanName="$environment-appsvcplan" \
         serverFarmResourceGroup=$resourceGroupName \
         virtualNetworkName=$virtualNetworkName subnetName="app-svc-vnet-integ-subnet"

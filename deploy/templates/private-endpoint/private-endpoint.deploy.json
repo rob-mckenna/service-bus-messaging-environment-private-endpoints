@@ -46,8 +46,8 @@
         }
     },
     "variables": {
-        "virtualNetworkResourceId": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
-        "subnetResourceId": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/virtualNetworks/subnets',parameters('virtualNetworkName'),parameters('subnetName'))]",
+        "virtualNetworkResourceId": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
+        "subnetResourceId": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('virtualNetworkName'),parameters('subnetName'))]",
         "subnetDeploymentName": "update-subnet-deployment",
         "privateDnsDeploymentName": "private-dns-deployment"
     },
