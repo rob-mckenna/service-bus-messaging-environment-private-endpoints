@@ -50,6 +50,9 @@
         "appSvcVnetIntegrationSubnetAddressSpace": {
             "type": "string"
         },
+        "apiMgmtSubnetAddressSpace": {
+            "type": "string"
+        },
         "tags": {
             "type": "object"
         }
@@ -104,6 +107,12 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    {
+                        "name": "apim-subnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('apiMgmtSubnetAddressSpace')]"
                         }
                     }
                 ],

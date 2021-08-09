@@ -30,7 +30,7 @@ echo "Log Analytics Workspace - START"
 logAnalyticsWorkspaceName="$environment-logwkspc"
 workspaceResourceId=$(az deployment group create \
     --resource-group $resourceGroupName \
-    --name log-analystics-workspace \
+    --name log-analytics-workspace \
     --template-file ../templates/log-analytics-workspace/log-analytics-workspace.deploy.json \
     --parameters @../templates/log-analytics-workspace/log-analytics-workspace.parameters.json \
     --parameters name=$logAnalyticsWorkspaceName location=$location tags=$tags --query properties.outputResources[0].id -o tsv)
@@ -39,12 +39,13 @@ echo "Log Analytics Workspace - END"
 
 echo "Application Insights - START"
 # Application Insights
+appInsightsName="$environment-appinsights"
 appInsightsId=$(az deployment group create \
     --resource-group $resourceGroupName \
     --name application-insight \
     --template-file ../templates/application-insights/application-insight.deploy.json \
     --parameters @../templates/application-insights/application-insight.parameters.json \
-    --parameters name="$environment-appinsights" regionId=$location tagsArray=$tags \
+    --parameters name=$appInsightsName regionId=$location tagsArray=$tags \
         logAnalyticsWorkspaceName=$logAnalyticsWorkspaceName --query id -o tsv)
 
 echo "Application Insights - END"
@@ -167,9 +168,7 @@ echo "Azure Function App - END"
 
 echo "API Management - START"
 # API Management
-appInsightsObject="{'name':'$environment-appinsights','id':'$appInsightsId'}"
-appInsightsInstrumentationKey=$(az resource show -g $resourceGroupName -n "$environment-appinsights" --resource-type "microsoft.insights/components" --query properties.InstrumentationKey)
-
+appInsightsInstrumentationKey=$(az resource show -g $resourceGroupName -n "$environment-appinsights" --resource-type "microsoft.insights/components" --query properties.InstrumentationKey -o tsv)
 az deployment group create \
     --resource-group $resourceGroupName \
     --name api-management \
@@ -177,7 +176,8 @@ az deployment group create \
     --parameters @../templates/api-management/api-management.parameters.json \
     --parameters apimName="$environment-apim" location=$location tagsByResource=$tags \
         organizationName=$organizationName adminEmail=$adminEmail \
-        appInsightsObject=$appInsightsObject appInsightsInstrumentationKey=$appInsightsInstrumentationKey 
+        appInsightsName=$appInsightsName appInsightsInstrumentationKey=$appInsightsInstrumentationKey \
+        virtualNetworkName=$virtualNetworkName subnetName='apim-subnet' virtualNetworkResourceGroup=$resourceGroupName
 
 echo "API Management - END"
 

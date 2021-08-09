@@ -52,6 +52,9 @@
         "appSvcVnetIntegrationSubnetAddressSpace": {
             "value": "10.2.2.0/26"
         },
+        "apiMgmtSubnetAddressSpace": {
+            "value": "10.2.3.0/26"
+        },
         "tags": {
             "value": {
                 "": ""
