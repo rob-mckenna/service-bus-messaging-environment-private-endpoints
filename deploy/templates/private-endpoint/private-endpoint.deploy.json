@@ -124,7 +124,7 @@
                     "resources": [
                         {
                             "apiVersion": "2017-05-10",
-                            "name": "PrivateDnsZone-deployment",
+                            "name": "private-dns-zone-deployment",
                             "type": "Microsoft.Resources/deployments",
                             "subscriptionId": "[parameters('subscriptionId')]",
                             "resourceGroup": "[parameters('resourceGroupName')]",
