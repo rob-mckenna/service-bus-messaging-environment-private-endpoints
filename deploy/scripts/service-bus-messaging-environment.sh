@@ -58,6 +58,7 @@ az deployment group create \
     --template-file ../templates/virtual-network/virtual-network.deploy.json \
     --parameters @../templates/virtual-network/virtual-network.parameters.json \
     --parameters virtualNetworkName=$virtualNetworkName location=$location resourceGroup=$resourceGroupName \
+        bastionName="$environment-bastion" publicIpAddressForBastionName="$environment-bastion-pip" \
         tags=$tags
 
 echo "Virtual Network with Azure Bastion - START"

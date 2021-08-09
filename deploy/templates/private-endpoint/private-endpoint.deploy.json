@@ -152,7 +152,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "VirtualNetworkLink-deployment1",
+            "name": "virtual-network-link-deployment1",
             "type": "Microsoft.Resources/deployments",
             "dependsOn": [
                 "[variables('privateDnsDeploymentName')]"
@@ -165,7 +165,7 @@
                     "resources": [
                         {
                             "apiVersion": "2017-05-10",
-                            "name": "VirtualNetworklink-deployment2",
+                            "name": "virtual-network-link-deployment2",
                             "type": "Microsoft.Resources/deployments",
                             "subscriptionId": "[parameters('subscriptionId')]",
                             "resourceGroup": "[parameters('resourceGroupName')]",
@@ -197,7 +197,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "DnsZoneGroup-deployment",
+            "name": "dns-zone-group",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('resourceGroupName')]",
             "dependsOn": [

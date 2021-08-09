@@ -41,13 +41,13 @@
             "value": true
         },
         "bastionName": {
-            "value": "svcbus-msging-dev02-bastion"
+            "value": "<BASTION_NAME>"
         },
         "bastionSubnetAddressSpace": {
             "value": "10.2.1.0/26"
         },
-        "publicIpAddressForBastion": {
-            "value": "svcbus-msging-dev02-pip"
+        "publicIpAddressForBastionName": {
+            "value": "<PIP_FOR_BASTION_NAME>"
         },
         "appSvcVnetIntegrationSubnetAddressSpace": {
             "value": "10.2.2.0/26"

@@ -44,7 +44,7 @@
         "bastionSubnetAddressSpace": {
             "type": "string"
         },
-        "publicIpAddressForBastion": {
+        "publicIpAddressForBastionName": {
             "type": "string"
         },
         "appSvcVnetIntegrationSubnetAddressSpace": {
@@ -122,7 +122,7 @@
         {
             "type": "Microsoft.Network/publicIpAddresses",
             "apiVersion": "2020-08-01",
-            "name": "[parameters('publicIpAddressForBastion')]",
+            "name": "[parameters('publicIpAddressForBastionName')]",
             "location": "[parameters('location')]",
             "sku": {
                 "name": "Standard"
@@ -138,7 +138,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-                "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressForBastion'))]"
+                "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressForBastionName'))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -149,7 +149,7 @@
                                 "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), 'AzureBastionSubnet')]"
                             },
                             "publicIPAddress": {
-                                "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressForBastion'))]"
+                                "id": "[resourceId(parameters('resourceGroup'), 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressForBastionName'))]"
                             }
                         }
                     }
