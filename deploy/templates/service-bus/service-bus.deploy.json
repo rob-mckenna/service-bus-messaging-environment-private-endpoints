@@ -42,6 +42,9 @@
     "subnetName": {
       "type": "string"
     },
+    "zoneRedundant": {
+      "type": "bool"
+    },
     "tags": {
       "type": "object"
     }
@@ -59,16 +62,18 @@
       "sku": {
         "name": "[parameters('serviceBusSku')]"
       },
-      "properties": {},
+      "properties": {
+        "zoneRedundant": "[parameters('zoneRedundant')]"
+      },
       "resources": [
         {
           "type": "Queues",
-          "apiVersion": "2017-04-01",
+          "apiVersion": "2021-01-01-preview",
           "name": "[parameters('serviceBusQueueName')]",
           "dependsOn": [
             "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusNamespaceName'))]"
           ],
-          "properties": {
+          "properties": {            
             "lockDuration": "PT5M",
             "maxSizeInMegabytes": 1024,
             "requiresDuplicateDetection": false,

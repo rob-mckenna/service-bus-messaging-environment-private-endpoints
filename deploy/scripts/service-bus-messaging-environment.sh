@@ -118,7 +118,8 @@ az deployment group create \
     --parameters serviceBusNamespaceName="$environment-nmspc" location=$location tags=$tags \
         serviceBusQueueName=$serviceBusQueueName serviceBusSku=$serviceBusSku \
         resourceGroupName=$resourceGroupName \
-        virtualNetworkName=$virtualNetworkName subnetName=$subnetName
+        virtualNetworkName=$virtualNetworkName subnetName=$subnetName \
+        zoneRedundant=true
 
 echo "Service Bus - END"
 

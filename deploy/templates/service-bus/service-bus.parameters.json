@@ -23,6 +23,9 @@
       "subnetName":{
           "value": "<SUBNET_NAME>"
       },
+      "zoneRedundant":{
+          "value": false
+      },
       "tags": {
           "value": {
             "": ""
