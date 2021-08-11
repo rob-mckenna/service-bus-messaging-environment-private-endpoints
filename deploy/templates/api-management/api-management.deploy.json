@@ -82,7 +82,6 @@
         }
     },
     "variables": {
-        "subnetResourceIdold": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('virtualNetworkName'),parameters('subnetName'))]",
         "subnetResourceId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
         "applicationInsightsResourceId": "[resourceId('microsoft.insights/components',parameters('appInsightsName'))]",
         "customPropertiesNonConsumption": {
