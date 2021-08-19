@@ -1,0 +1,263 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appGatewayName": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "apimName": {
+            "type": "string"
+        },
+        "domainNameLabel": {
+            "type": "string"
+        },
+        "publicIpAddressForAppGatewayName": {
+            "type": "string"
+        },
+        "logAnalyticsWorkspaceName": {
+            "type": "string"
+        },
+        "appGatewayCapacity": {
+            "type": "int"
+        }
+    },
+    "variables": {
+        "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/applicationGateways",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('appGatewayName')]",
+            "location": "[parameters('location')]",            
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpAddressForAppGatewayName'))]"
+            ],
+            "properties": {
+                "sku": {
+                    "name": "WAF_v2",
+                    "tier": "WAF_v2",
+                    "capacity": "[parameters('appGatewayCapacity')]"
+                },
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "appGatewayIpConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), 'appGatewaySubnet')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "appGwPublicFrontendIp",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpAddressForAppGatewayName'))]"
+                            }
+                        }
+                    }
+                ],
+                "frontendPorts": [
+                    {
+                        "name": "port_80",
+                        "properties": {
+                            "port": 80
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "gatewayBackEnd",
+                        "properties": {
+                            "backendAddresses": [
+                                {
+                                    "fqdn": "[concat(parameters('apimName'), '.azure-api.net')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "apim-gateway-https-setting",
+                        "properties": {
+                            "port": 443,
+                            "protocol": "Https",
+                            "cookieBasedAffinity": "Disabled",
+                            "hostName": "[concat(parameters('apimName'), '.azure-api.net')]",
+                            "pickHostNameFromBackendAddress": false,
+                            "requestTimeout": 20,
+                            "probe": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes',  parameters('appGatewayName'), 'apim-gateway-probe')]"
+                            }
+                        }
+                    }
+                ],
+                "httpListeners": [
+                    {
+                        "name": "apim-listener",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontEndIPConfigurations',  parameters('appGatewayName'), 'appGwPublicFrontendIp')]"
+                            },
+                            "frontendPort": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontEndPorts',  parameters('appGatewayName'), 'port_80')]"
+                            },
+                            "protocol": "Http",
+                            "requireServerNameIndication": false
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "name": "apim-routing-rule",
+                        "properties": {
+                            "ruleType": "Basic",
+                            "httpListener": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners', parameters('appGatewayName'), 'apim-listener')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools', parameters('appGatewayName'), 'gatewayBackEnd')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', parameters('appGatewayName'), 'apim-gateway-https-setting')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "apim-gateway-probe",
+                        "properties": {
+                            "protocol": "Https",
+                            "host": "[concat(parameters('apimName'), '.azure-api.net')]",
+                            "port": 443,
+                            "path": "/status-0123456789abcdef",
+                            "interval": 30,
+                            "timeout": 120,
+                            "unhealthyThreshold": 8,
+                            "pickHostNameFromBackendHttpSettings": false,
+                            "minServers": 0
+                        }
+                    }
+                ],
+                "webApplicationFirewallConfiguration": {
+                    "enabled": true,
+                    "firewallMode": "Detection",
+                    "ruleSetType": "OWASP",
+                    "ruleSetVersion": "3.2",
+                    "requestBodyCheck": true,
+                    "maxRequestBodySizeInKb": 128,
+                    "fileUploadLimitInMb": 100
+                }
+            }
+        },
+        {
+            "scope": "[format('Microsoft.Network/applicationGateways/{0}', parameters('appGatewayName'))]",
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "apiVersion": "2017-05-01-preview",
+            "name": "application-gateway-diagnosticsettings",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/applicationGateways', parameters('appGatewayName'))]"
+            ],
+            "properties": {
+                "workspaceId": "[variables('workspaceResourceId')]",
+                "logs": [
+                    {
+                        "category": "ApplicationGatewayAccessLog",
+                        "enabled": true
+                    },
+                    {
+                        "category": "ApplicationGatewayPerformanceLog",
+                        "enabled": true
+                    },
+                    {
+                        "category": "ApplicationGatewayFirewallLog",
+                        "enabled": true
+                    }
+                ],
+                "metrics": [
+                    {
+                        "category": "AllMetrics",
+                        "enabled": true
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('publicIpAddressForAppGatewayName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('domainNameLabel')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2018-09-01",
+            "name": "azure-api.net",
+            "location": "global",
+            "resources": [
+                {
+                    "condition": true,                    
+                    "type": "A",
+                    "apiVersion": "2018-09-01",
+                    "name": "[parameters('apimName')]",
+                    "location": "global",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Network/privateDnsZones', 'azure-api.net')]"
+                    ],
+                    "properties": {
+                        "ttl": 36000,
+                        "aRecords": [
+                            {
+                                "ipv4Address": "[reference(resourceId('Microsoft.ApiManagement/service', parameters('apimName')),'2021-01-01-preview').privateIPAddresses[0]]"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "virtualNetworkLinks",
+                    "apiVersion": "2020-06-01",
+                    "name": "[concat(parameters('virtualNetworkName'),'-dns-link')]",                    
+                    "location": "global",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Network/privateDnsZones', 'azure-api.net')]"
+                    ],
+                    "properties": {
+                        "registrationEnabled": true,
+                        "virtualNetwork": {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+                        }
+                    }
+                }
+            ],
+            "properties": {
+            }
+        }
+    ],
+    "outputs": {
+        "publicEndpointFqdn": {
+            "type": "string",
+            "value": "[reference(parameters('publicIpAddressForAppGatewayName')).dnsSettings.fqdn]"
+        }
+    }
+}

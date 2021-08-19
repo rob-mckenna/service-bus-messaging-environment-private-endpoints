@@ -19,6 +19,14 @@ resourceGroupName="$environment-rg"
 tenantId="$(az account show --query tenantId -o tsv)"
 currentUserObjectId=$(az ad signed-in-user show --query objectId -o tsv)
 currentSubscriptionId=$(az account show --query id -o tsv)
+
+logAnalyticsWorkspaceName="$environment-logwkspc"
+appInsightsName="$environment-appinsights"
+virtualNetworkName="$environment-vnet"
+subnetName="default"
+
+serviceBusSku="Premium"
+apimName="$environment-apim"
 echo "Set Variables - END"
 
 echo "Create Resource Group - START"
@@ -27,7 +35,6 @@ echo "Create Resource Group - END"
 
 echo "Log Analytics Workspace - START"
 # Log Analytics Workspace
-logAnalyticsWorkspaceName="$environment-logwkspc"
 workspaceResourceId=$(az deployment group create \
     --resource-group $resourceGroupName \
     --name log-analytics-workspace \
@@ -39,7 +46,6 @@ echo "Log Analytics Workspace - END"
 
 echo "Application Insights - START"
 # Application Insights
-appInsightsName="$environment-appinsights"
 appInsightsId=$(az deployment group create \
     --resource-group $resourceGroupName \
     --name application-insight \
@@ -51,7 +57,6 @@ appInsightsId=$(az deployment group create \
 echo "Application Insights - END"
 
 echo "Virtual Network with Azure Bastion - START"
-virtualNetworkName="$environment-vnet"
 az deployment group create \
     --resource-group $resourceGroupName \
     --name virtual-network \
@@ -66,7 +71,6 @@ echo "Virtual Network with Azure Bastion - START"
 echo "Virtual Machine - START"
 virtualMachineName="$environment-vm01"
 virtualMachineComputerName=${virtualMachineName:0:15}
-subnetName="default"
 networkInterfaceName="$environment-nic"
 networkInterfaceIpConfigName="ipconfig1"
 az deployment group create \
@@ -109,7 +113,6 @@ echo "Storage Account with Private Endpoint - END"
 
 echo "Service Bus - START"
 # Service Bus namespace and queue(s)
-serviceBusSku="Premium"
 az deployment group create \
     --resource-group $resourceGroupName \
     --name service-bus \
@@ -176,11 +179,25 @@ az deployment group create \
     --name api-management \
     --template-file ../templates/api-management/api-management.deploy.json \
     --parameters @../templates/api-management/api-management.parameters.json \
-    --parameters apimName="$environment-apim" location=$location tagsByResource=$tags \
+    --parameters apimName=$apimName location=$location tagsByResource=$tags \
         organizationName=$organizationName adminEmail=$adminEmail \
         appInsightsName=$appInsightsName appInsightsInstrumentationKey=$appInsightsInstrumentationKey \
         virtualNetworkName=$virtualNetworkName subnetName='apim-subnet' virtualNetworkResourceGroup=$resourceGroupName
 
 echo "API Management - END"
+
+echo "Application Gateway - START"
+# Application Gateway
+az deployment group create \
+    --resource-group $resourceGroupName \
+    --name application-gateway \
+    --template-file ../templates/application-gateway/application-gateway.deploy.json \
+    --parameters @../templates/application-gateway/application-gateway.parameters.json \
+    --parameters appGatewayName="$environment-appgtway" location=$location \
+        virtualNetworkName=$virtualNetworkName apimName=$apimName \
+        domainNameLabel=$environment publicIpAddressForAppGatewayName="$environment-appgtway-pip" \
+        logAnalyticsWorkspaceName=$logAnalyticsWorkspaceName
+
+echo "Application Gateway - END"
 
 echo "Environment Setup Complete!"

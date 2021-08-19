@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appGatewayName": {
+            "value": "<APP_GATEWAY_NAME>"
+        },
+        "virtualNetworkName": {
+            "value": "<VIRTUAL_NETWORK_NAME>"
+        },
+        "apimName": {
+            "value": "<APIMGMT_NAME>"
+        },
+        "domainNameLabel": {
+            "value": "<DNS_NAME_LABEL>"
+        },
+        "publicIpAddressForAppGatewayName": {
+            "value": "<PUBLIC_IP_ADDRESS_FOR_APP_GATEWAY_NAME>"
+        },
+        "logAnalyticsWorkspaceName": {
+            "value": "<LOG_ANALYTICS_WORKSPACE_NAME>"
+        },
+        "appGatewayCapacity": {
+            "value": 1
+        }
+    }
+}

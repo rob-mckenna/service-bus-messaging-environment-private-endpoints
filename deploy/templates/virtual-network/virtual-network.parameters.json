@@ -43,17 +43,20 @@
         "bastionName": {
             "value": "<BASTION_NAME>"
         },
-        "bastionSubnetAddressSpace": {
-            "value": "10.2.1.0/26"
-        },
         "publicIpAddressForBastionName": {
             "value": "<PIP_FOR_BASTION_NAME>"
+        },
+        "bastionSubnetAddressSpace": {
+            "value": "10.2.1.0/26"
         },
         "appSvcVnetIntegrationSubnetAddressSpace": {
             "value": "10.2.2.0/26"
         },
         "apiMgmtSubnetAddressSpace": {
             "value": "10.2.3.0/26"
+        },
+        "appGatewaySubnetAddressSpace": {
+            "value": "10.2.4.0/24"
         },
         "tags": {
             "value": {

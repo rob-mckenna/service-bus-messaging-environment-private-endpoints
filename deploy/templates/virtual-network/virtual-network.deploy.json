@@ -53,6 +53,9 @@
         "apiMgmtSubnetAddressSpace": {
             "type": "string"
         },
+        "appGatewaySubnetAddressSpace": {
+            "type": "string"
+        },
         "tags": {
             "type": "object"
         }
@@ -112,7 +115,33 @@
                     {
                         "name": "apim-subnet",
                         "properties": {
-                            "addressPrefix": "[parameters('apiMgmtSubnetAddressSpace')]"
+                            "addressPrefix": "[parameters('apiMgmtSubnetAddressSpace')]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "appGatewaySubnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('appGatewaySubnetAddressSpace')]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
                         }
                     }
                 ],
