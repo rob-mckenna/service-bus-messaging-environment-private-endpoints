@@ -58,6 +58,9 @@
         "appGatewaySubnetAddressSpace": {
             "value": "10.2.4.0/24"
         },
+        "apimNsgName": {
+            "value": "<APIM_NSG_NAME>"
+        },
         "tags": {
             "value": {
                 "": ""

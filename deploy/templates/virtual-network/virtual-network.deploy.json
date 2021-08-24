@@ -56,17 +56,18 @@
         "appGatewaySubnetAddressSpace": {
             "type": "string"
         },
+        "apimNsgName": {
+            "type": "string"
+        },
         "tags": {
             "type": "object"
         }
     },
-    "variables": {
-        "apimNsgName": "svcbus-msging-dev7d-apim-nsg"
-    },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[variables('apimNsgName')]",
+            "name": "[parameters('apimNsgName')]",
             "apiVersion": "2020-06-01",
             "location": "[parameters('location')]",
             "properties": {
@@ -307,7 +308,7 @@
             "location": "[parameters('location')]",
             "extendedLocation": "[if(empty(parameters('extendedLocation')), json('null'), parameters('extendedLocation'))]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('apimNsgName'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('apimNsgName'))]"
             ],
             "tags": "[parameters('tags')]",
             "properties": {
@@ -357,7 +358,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('apiMgmtSubnetAddressSpace')]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('apimNsgName'))]"
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('apimNsgName'))]"
                             },
                             "serviceEndpoints": [
                                 {
