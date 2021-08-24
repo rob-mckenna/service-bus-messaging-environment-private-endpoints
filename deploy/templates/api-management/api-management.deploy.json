@@ -84,6 +84,7 @@
     "variables": {
         "subnetResourceId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
         "applicationInsightsResourceId": "[resourceId('microsoft.insights/components',parameters('appInsightsName'))]",
+        "apimPublicIpAddressName": "[concat(parameters('apimName'),'-pip')]",
         "customPropertiesNonConsumption": {
             "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TripleDes168": "[parameters('tripleDES')]",
             "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": "[parameters('clientTls11')]",
@@ -105,6 +106,31 @@
     },
     "resources": [
         {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "name": "[variables('apimPublicIpAddressName')]",
+            "location": "eastus",
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "zones": [
+                "3",
+                "1",
+                "2"
+            ],
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('apimPublicIpAddressName')]",
+                    "fqdn": "[concat(variables('apimPublicIpAddressName'),'.eastus.cloudapp.azure.com')]"
+                },
+                "ipTags": []
+            }
+        },
+        {
             "type": "Microsoft.ApiManagement/service",
             "apiVersion": "2021-01-01-preview",
             "name": "[parameters('apimName')]",
@@ -114,6 +140,9 @@
                 "capacity": "[parameters('capacity')]"
             },
             "identity": "[parameters('identity')]",
+            "dependsOn":[
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('apimPublicIpAddressName'))]"
+            ],
             "tags": "[parameters('tagsByResource')]",
             "properties": {
                 "publisherEmail": "[parameters('adminEmail')]",
@@ -122,6 +151,7 @@
                 "virtualNetworkConfiguration": {
                     "subnetResourceId": "[variables('subnetResourceId')]"
                 },
+                "publicIpAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('apimPublicIpAddressName'))]",
                 "customProperties": "[if(equals(parameters('tier'), 'Consumption'), variables('customPropertiesConsumption'), variables('customPropertiesNonConsumption'))]"
             },
             "resources": [

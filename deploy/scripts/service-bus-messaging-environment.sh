@@ -68,7 +68,7 @@ az deployment group create \
 
 echo "Virtual Network with Azure Bastion - START"
 
-echo "Virtual Machine - START"
+echo "Virtual Machine for Jumpbox - START"
 virtualMachineName="$environment-vm01"
 virtualMachineComputerName=${virtualMachineName:0:15}
 networkInterfaceName="$environment-nic"
@@ -83,7 +83,24 @@ az deployment group create \
         virtualMachineComputerName=$virtualMachineComputerName subnetName=$subnetName virtualNetworkName=$virtualNetworkName \
         adminUsername=$vmAdminUsername adminPassword=$vmAdminPassword tags=$tags
 
-echo "Virtual Machine - END"
+echo "Virtual Machine for Jumpbox - END"
+
+echo "Virtual Machine for DevOps - START"
+virtualMachineName="$environment-devops-vm01"
+virtualMachineComputerName="${virtualMachineName:0:8}-devops"
+networkInterfaceName="$environment-devops-nic"
+networkInterfaceIpConfigName="ipconfig2"
+az deployment group create \
+    --resource-group $resourceGroupName \
+    --name virtual-machine \
+    --template-file ../templates/virtual-machine/virtual-machine.deploy.json \
+    --parameters @../templates/virtual-machine/virtual-machine.parameters.json \
+    --parameters virtualMachineName=$virtualMachineName virtualMachineRG=$resourceGroupName location=$location \
+        networkInterfaceName=$networkInterfaceName networkInterfaceIpConfigName=$networkInterfaceIpConfigName networkSecurityGroupName="$virtualMachineName-nsg" \
+        virtualMachineComputerName=$virtualMachineComputerName subnetName=$subnetName virtualNetworkName=$virtualNetworkName \
+        adminUsername=$vmAdminUsername adminPassword=$vmAdminPassword tags=$tags
+
+echo "Virtual Machine for DevOps - END"
 
 echo "Key Vault - START"
 # Key Vault
