@@ -23,7 +23,7 @@ currentSubscriptionId=$(az account show --query id -o tsv)
 logAnalyticsWorkspaceName="$environment-logwkspc"
 appInsightsName="$environment-appinsights"
 virtualNetworkName="$environment-vnet"
-subnetName="default"
+subnetName="applicationSubnet"
 
 serviceBusSku="Premium"
 apimName="$environment-apim"
