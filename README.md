@@ -26,7 +26,7 @@ vmAdminPassword |  Admin user password for logging into the virtual machine.
 tags |  Tags to be applied to resources.  Replace with tag Name and Value of our choice.  Be sure to maintain the JSON format.
 
 * Be sure to save the chages to the script file.
-* Change directory to the scripts directory.
+* Change directory to the scripts directory.  The scripts expects to be executed from this directory and expects the repositories folder structure to be in place in order to properly locate the ARM template files.
 * Execute the shell script to build the environment.
 
 ```bash
