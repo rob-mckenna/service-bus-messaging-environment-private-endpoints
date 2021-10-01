@@ -32,3 +32,10 @@ tags |  Tags to be applied to resources.  Replace with tag Name and Value of our
 ```bash
 ./service-bus-messaging-environment.sh
 ```
+
+## Supporting Repositories
+
+These repositories contain sample applications that provide code examples for sending messages to Service Bus.
+
+* [ASP.NET Core Web API for interacting with Service Bus](https://github.com/rob-mckenna/service-bus-messaging-web-api)
+* [.NET Core Console App for interacting with Service Bus](https://github.com/rob-mckenna/service-bus-messaging-console-app)
