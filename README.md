@@ -6,7 +6,9 @@ This repository builds an Azure Service Bus messaging environment using private 
 
 ## How To Use This Repository
 
-* The repository can be cloned locally or within Azure Cloud Shell.  Locally, is can be run from within Visual Studio Code using a Git Bash terminal.  If using Azure Cloud Shell, make sure Bash is selected and not PowerShell.
+* The repository can be cloned locally or within Azure Cloud Shell.
+  * Locally, is can be run from within Visual Studio Code using a Git Bash terminal.
+  * Using Azure Cloud Shell, make sure Bash is selected and not PowerShell.
 * Open the service-bus-messaging-environment.sh script file to edit the variables listed below
 
 Variable Name | Description
